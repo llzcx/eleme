@@ -1,0 +1,39 @@
+DELETE /wm_shop
+
+PUT /wm_shop
+{
+  "settings": {
+    "number_of_shards": "1",
+    "number_of_replicas": "0"
+  },
+  "mappings": {
+    "properties": {
+      "shop_id": {
+        "type": "keyword"
+      },
+      "shop_name": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "spu_id": {
+        "type": "keyword"
+      },
+      "spu_name": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "geohash": {
+        "type": "geo_point"
+      },
+      "distance":{
+        "type": "double"
+      },
+      "shop_spu": {
+        "type": "join",
+        "relations": {
+          "shop": ["spu"]
+        }
+      }
+    }
+  }
+}

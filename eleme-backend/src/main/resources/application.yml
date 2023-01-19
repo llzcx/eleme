@@ -1,0 +1,118 @@
+server:
+  port: 8080
+  servlet:
+    multipart:
+      max-request-size: 5GB  # 上传文件总的最大值 默认10MB
+      max-file-size: 1GB #单个文件最大值 默认10MB
+    context-path: /boot
+
+###文件上传
+file:
+  ###静态资源对外暴露的访问路径
+  staticAccessPath: /file/**
+  ###静态资源实际存储路径
+  uploadFolder: D:/takeout/server/myFile/
+  uploadImage: image/
+
+
+spring:
+  # redis
+  redis:
+    redisson:
+      config: |
+        clusterServersConfig:
+          idleConnectionTimeout: 10000
+          connectTimeout: 10000
+          timeout: 3000
+          retryAttempts: 3
+          retryInterval: 1500
+          failedSlaveReconnectionInterval: 3000
+          failedSlaveCheckInterval: 60000
+          password: null
+          subscriptionsPerConnection: 5
+          clientName: null
+          loadBalancer: !<org.redisson.connection.balancer.RoundRobinLoadBalancer> {}
+          subscriptionConnectionMinimumIdleSize: 1
+          subscriptionConnectionPoolSize: 50
+          slaveConnectionMinimumIdleSize: 24
+          slaveConnectionPoolSize: 64
+          masterConnectionMinimumIdleSize: 24
+          masterConnectionPoolSize: 64
+          readMode: "SLAVE"
+          subscriptionMode: "SLAVE"
+          nodeAddresses:
+          - "redis://127.0.0.1:6379"
+          scanInterval: 1000
+          pingConnectionInterval: 0
+          keepAlive: false
+          tcpNoDelay: false
+        threads: 16
+        nettyThreads: 32
+        codec: !<org.redisson.codec.Kryo5Codec> {}
+        transportMode: "NIO"
+    host: 0.0.0.0
+    port: 6379
+    timeout: 1000
+    # password:
+    lettuce:
+     pool:
+      minIdle: 5
+      maxIdle: 200
+      maxWait: 10000
+      maxActive: 8
+  jackson:
+    default-property-inclusion: non_null #json处理是忽略非空字段
+
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/takeoutweb?useSSL=false&amp&serverTimezone=UTC
+      username: root
+      password: chenxiang
+  data:
+    #词库路径:D:\takeout\server\myFile\TXT/fenci.txt
+    elasticsearch:
+      repositories:
+        enabled:
+ik:
+  path: D:\takeout\server\myFile\TXT/fenci.txt
+#  rocketmq:
+#    name-server: 127.0.0.1:9876
+#    producer:
+#      #必须指定group
+#      group: test-group
+
+
+mybatis-plus:
+  global-config:
+
+    db-config:
+      table-prefix:
+      id-type:
+#      logic-delete-field:"delete"
+#      logic-delete-value:1
+#      logic-not-delete-value:0
+
+
+    banner: false
+
+#mybatis plus调试打印日志(查看sql)
+mybatis:
+  configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #开启驼峰命名转换
+    map-underscore-to-camel-case: true
+
+#开启日志打印
+logging:
+  level:
+    com.cx.springboot02.mapper: debug
+
+
+rocketmq:
+  producer:
+    producer-group: CoisiniProducerGroup
+  consumer:
+    consumer-group: CoisiniConsumerGroup
+  namesrv-addr: 127.0.0.1:9876
+

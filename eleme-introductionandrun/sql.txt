@@ -1,0 +1,336 @@
+/*
+SQLyog Ultimate v12.09 (64 bit)
+MySQL - 8.0.28 : Database - takeoutweb
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`takeoutweb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `takeoutweb`;
+
+/*Table structure for table `address` */
+
+DROP TABLE IF EXISTS `address`;
+
+CREATE TABLE `address` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `cid` bigint DEFAULT NULL COMMENT '用户id',
+  `geohash` varchar(50) DEFAULT NULL COMMENT '经纬度',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名字',
+  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '电话',
+  `address` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地址',
+  `specific_address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '详细地址',
+  `sex` bit(1) DEFAULT b'1' COMMENT '性别 1为男 0为女',
+  `create_time` date DEFAULT '2022-11-08' COMMENT '创建时间',
+  `tag` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '家 学校',
+  `is_delete` bit(1) DEFAULT NULL COMMENT '是否被删除',
+  `is_default` bit(1) DEFAULT b'0' COMMENT '是否为地址',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `browse_history` */
+
+DROP TABLE IF EXISTS `browse_history`;
+
+CREATE TABLE `browse_history` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `customer_id` bigint DEFAULT NULL COMMENT '顾客id',
+  `business_id` bigint DEFAULT NULL COMMENT '商家id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `business` */
+
+DROP TABLE IF EXISTS `business`;
+
+CREATE TABLE `business` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `account` varchar(30) DEFAULT NULL COMMENT '账号',
+  `password` varchar(30) DEFAULT NULL COMMENT '密码',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '商家名字',
+  `address` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '餐馆地址',
+  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '联系电话',
+  `longitude` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '经度',
+  `latitude` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '纬度',
+  `category` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '食品分类',
+  `image_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '店铺图片地址',
+  `float_delivery_fee` int DEFAULT '5' COMMENT '运费',
+  `float_minimum_order_amount` int DEFAULT '20' COMMENT '起送价',
+  `description` varchar(200) DEFAULT NULL COMMENT '餐馆介绍',
+  `promotion_info` varchar(256) DEFAULT NULL COMMENT '店铺标语',
+  `is_premium` bit(1) DEFAULT b'1' COMMENT '品牌商铺',
+  `delivery_mode` bit(1) DEFAULT b'1' COMMENT '支持蜂鸟',
+  `new_shop` bit(1) DEFAULT b'0' COMMENT '新开店铺',
+  `bao` bit(1) DEFAULT b'1' COMMENT '支持保险',
+  `zhun` bit(1) DEFAULT b'1' COMMENT '准时达',
+  `piao` bit(1) DEFAULT b'1' COMMENT '开发票',
+  `start_time` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '营业时间',
+  `end_time` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '打烊时间',
+  `business_license_image` varchar(256) DEFAULT NULL COMMENT '营业执照图片地址',
+  `catering_service_license_image` varchar(256) DEFAULT NULL COMMENT '餐饮服务许可证图片地址',
+  `deactivate` bit(1) DEFAULT b'0' COMMENT '是否被停用',
+  `check_pass` int DEFAULT '-1' COMMENT '审核情况',
+  `shop_class_id` bigint DEFAULT NULL COMMENT '商家分类id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `business_to_shopclass` */
+
+DROP TABLE IF EXISTS `business_to_shopclass`;
+
+CREATE TABLE `business_to_shopclass` (
+  `bid` bigint NOT NULL COMMENT '商家id',
+  `sid` bigint NOT NULL COMMENT '类型id',
+  `is_delete` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否被删除',
+  PRIMARY KEY (`bid`,`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `category` */
+
+DROP TABLE IF EXISTS `category`;
+
+CREATE TABLE `category` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `description` varchar(200) DEFAULT NULL,
+  `business_id` bigint NOT NULL,
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `sort` int DEFAULT '0' COMMENT '在前端的排序位置',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `comment` */
+
+DROP TABLE IF EXISTS `comment`;
+
+CREATE TABLE `comment` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '...' COMMENT '内容',
+  `customer_id` bigint DEFAULT NULL COMMENT '客户id',
+  `shop_id` bigint DEFAULT NULL COMMENT '商家id',
+  `order_id` bigint DEFAULT NULL COMMENT '订单id',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `is_delete` bit(1) DEFAULT b'0' COMMENT '是否被删除',
+  `parent` bigint DEFAULT NULL COMMENT '父级评论',
+  `top_parent` bigint DEFAULT NULL COMMENT '顶级评论',
+  `rating` float DEFAULT NULL COMMENT '评',
+  `is_customer` bit(1) DEFAULT b'1' COMMENT '是否为顾客',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `comment_img` */
+
+DROP TABLE IF EXISTS `comment_img`;
+
+CREATE TABLE `comment_img` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `image_path` varchar(500) DEFAULT NULL,
+  `comment_id` bigint DEFAULT NULL COMMENT '评论id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `customer` */
+
+DROP TABLE IF EXISTS `customer`;
+
+CREATE TABLE `customer` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+  `phone_number` varchar(20) DEFAULT NULL COMMENT '手机号',
+  `avatar` varchar(528) DEFAULT NULL COMMENT '头像路径',
+  `email` varchar(20) NOT NULL COMMENT '邮箱',
+  `role` varchar(20) DEFAULT NULL COMMENT '角色',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `customer_business_msg` */
+
+DROP TABLE IF EXISTS `customer_business_msg`;
+
+CREATE TABLE `customer_business_msg` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `customer_id` bigint DEFAULT NULL COMMENT '顾客id',
+  `business_id` bigint DEFAULT NULL COMMENT '商家id',
+  `content` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '内容',
+  `customer_sender` bit(1) DEFAULT b'0' COMMENT '发送者是否为顾客',
+  `is_delete` bit(1) DEFAULT NULL COMMENT '是否被删除',
+  `create_time` datetime DEFAULT NULL COMMENT '发送时间',
+  `customer_read` bit(1) DEFAULT b'0' COMMENT '用户是否已读',
+  `business_read` bit(1) DEFAULT b'0' COMMENT '商家是否已读',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1607294962740342786 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `food` */
+
+DROP TABLE IF EXISTS `food`;
+
+CREATE TABLE `food` (
+  `sku_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `specs_list` varchar(528) DEFAULT NULL COMMENT '规格列表',
+  `price` float DEFAULT '0' COMMENT '价格',
+  `packing_fee` float DEFAULT '0' COMMENT '打包费',
+  `stock` int DEFAULT '0' COMMENT '库存容量',
+  `goods_id` bigint DEFAULT NULL COMMENT 'spu的id',
+  `is_single` bit(1) DEFAULT b'0' COMMENT '是否为单价sku',
+  `is_delete` bit(1) DEFAULT b'0' COMMENT '是否被删除',
+  PRIMARY KEY (`sku_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `goods` */
+
+DROP TABLE IF EXISTS `goods`;
+
+CREATE TABLE `goods` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'spu id',
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'spu名称',
+  `category_id` bigint DEFAULT NULL COMMENT 'spu分类',
+  `image_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'spu 图片',
+  `description` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'spu 描述',
+  `min_specs_count` int DEFAULT '0' COMMENT '最少需要多少个规格',
+  `is_single` bit(1) DEFAULT b'0' COMMENT '是否含有规格',
+  `is_delete` bit(1) DEFAULT b'0' COMMENT '是否被删除',
+  `on_shelves` bit(1) DEFAULT b'1' COMMENT '是否上架',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `manager` */
+
+DROP TABLE IF EXISTS `manager`;
+
+CREATE TABLE `manager` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '账号',
+  `password` varchar(256) DEFAULT NULL COMMENT '密码',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `order` */
+
+DROP TABLE IF EXISTS `order`;
+
+CREATE TABLE `order` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `customer_id` bigint DEFAULT NULL COMMENT '顾客id',
+  `shop_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '餐馆id',
+  `expected_time` datetime DEFAULT NULL COMMENT '订单预期送达时间',
+  `geohash` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '下单经纬度',
+  `remarks` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
+  `order_state` int DEFAULT NULL COMMENT '订单状态',
+  `consignee` varchar(20) DEFAULT NULL COMMENT '收货人',
+  `address_name` varchar(200) DEFAULT NULL COMMENT '地址',
+  `shop_address` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '商铺地址',
+  `shop_geohash` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '商铺经纬度',
+  `phone` varchar(20) DEFAULT NULL COMMENT '电话',
+  `comment_state` bit(1) DEFAULT b'0' COMMENT '评论状态',
+  `after_sales_status` int DEFAULT NULL COMMENT '售后状态',
+  `float_delivery_fee` int DEFAULT NULL COMMENT '运费',
+  `total_price` float DEFAULT NULL COMMENT '总金额',
+  `real_pay` float DEFAULT NULL COMMENT '真实支付金额',
+  `pay_time` datetime DEFAULT NULL COMMENT '订单支付时间',
+  `create_time` datetime DEFAULT NULL COMMENT '订单创建时间',
+  `receiving_time` datetime DEFAULT NULL COMMENT '接单时间',
+  `dispatch_time` datetime DEFAULT NULL COMMENT '派送时间',
+  `finish_time` datetime DEFAULT NULL COMMENT '订单完成时间',
+  `arrival_time` datetime DEFAULT NULL COMMENT '订单实际送达时间',
+  `cancel_time` datetime DEFAULT NULL COMMENT '订单取消时间',
+  `timeout_time` datetime DEFAULT NULL COMMENT '订单超时时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `order_details` */
+
+DROP TABLE IF EXISTS `order_details`;
+
+CREATE TABLE `order_details` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `order_id` bigint DEFAULT NULL COMMENT '订单id',
+  `goods_name` varchar(100) DEFAULT NULL COMMENT '商品名称',
+  `image_path` varchar(300) DEFAULT NULL COMMENT '图片路径',
+  `num` int DEFAULT NULL COMMENT '数量',
+  `price` float DEFAULT NULL COMMENT '价格',
+  `packing_fee` float DEFAULT NULL COMMENT '打包费',
+  `specs_list` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '规格(可为空)',
+  `sku_id` bigint DEFAULT NULL COMMENT '商品skuid',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1607300269021442051 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `rider` */
+
+DROP TABLE IF EXISTS `rider`;
+
+CREATE TABLE `rider` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `account` varchar(256) DEFAULT NULL COMMENT '账号',
+  `password` varchar(256) DEFAULT NULL COMMENT '密码',
+  `phone` varchar(128) DEFAULT NULL COMMENT '手机号',
+  `real_name` varchar(20) DEFAULT NULL COMMENT '真实姓名',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `shop_class` */
+
+DROP TABLE IF EXISTS `shop_class`;
+
+CREATE TABLE `shop_class` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '图片',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名字',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `specs` */
+
+DROP TABLE IF EXISTS `specs`;
+
+CREATE TABLE `specs` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '规格主键',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '规格名称',
+  `description` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '规格描述',
+  `specs_list_sort` int DEFAULT NULL COMMENT '在spu对应列中的排序位置',
+  `sort` int DEFAULT NULL COMMENT '在前端的排序位置',
+  `specs_category_id` varchar(20) DEFAULT NULL COMMENT '分类id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `specs_category` */
+
+DROP TABLE IF EXISTS `specs_category`;
+
+CREATE TABLE `specs_category` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '默认' COMMENT '规格分类名称',
+  `goods_id` bigint DEFAULT NULL COMMENT '属于哪个spu',
+  `sort` int DEFAULT NULL COMMENT '排序',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Table structure for table `spu_shop` */
+
+DROP TABLE IF EXISTS `spu_shop`;
+
+/*!50001 DROP VIEW IF EXISTS `spu_shop` */;
+/*!50001 DROP TABLE IF EXISTS `spu_shop` */;
+
+/*!50001 CREATE TABLE  `spu_shop`(
+ `bid` bigint 
+)*/;
+
+/*View structure for view spu_shop */
+
+/*!50001 DROP TABLE IF EXISTS `spu_shop` */;
+/*!50001 DROP VIEW IF EXISTS `spu_shop` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `spu_shop` AS select distinct `business`.`id` AS `bid` from ((`goods` join `category` on((`goods`.`category_id` = `category`.`id`))) join `business` on((`category`.`business_id` = `business`.`id`))) */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
