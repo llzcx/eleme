@@ -1,8 +1,10 @@
 # eleme项目运行
 
-配置mysql,elasticsearch,rocketmq,沙箱支付,高德地图环境
+配置mysql,elasticsearch,rocketmq,redis,沙箱支付,高德地图环境
 
 mysql:对应sql文件建表
+
+redis:均可
 
 elasticsearch:配置对应mapping和ik分词器
 
