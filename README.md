@@ -9,7 +9,9 @@
 
 利用redis实现了缓存热点商家,每个城市热搜词排行榜功能
 
-拉取<5km范围的商家采用了elasticsearch的geohash_point,还利用了elasticsearch的父子查询以及分词器实现了输入商品/商家关键词搜索附近商家,后台还可以手动添加词库中词汇.
+拉取<5km范围的商家采用了elasticsearch的geohash_point
+
+利用了elasticsearch的父子查询以及分词器实现了输入商品/商家关键词搜索附近商家,后台还可以手动添加词库中词汇.
 
 rockermq实现了订单超时功能,订单状态接口实现了接口的幂等性,为支付失败提供退款等等功能.
 
